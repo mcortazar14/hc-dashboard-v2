@@ -1,0 +1,12 @@
+{
+  "name": "hc-dashboard-v2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "sync": "node sync/index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "googleapis": "^144.0.0"
+  }
+}
