@@ -7,6 +7,14 @@ Sheet ID: `1WC22XiU199p8N8L8a2i0wtrynqT7j49_o-A3fhpQsfc`
 
 ---
 
+## Cómo se llena el WEEKLY TRACKER
+
+**Los TARGETS se calculan automáticamente** desde la pestaña CONFIG (fórmulas que toman el tamaño del portafolio de cada HC y calculan lo proporcional).
+
+**Los ACTUALS los ingresa el equipo a mano** mirando GHL, el check-in form y el Upsell Tracker. No hay fórmula automática que los jale. El dashboard nuevo los va a calcular automáticamente desde Supabase.
+
+---
+
 ## Métricas del WEEKLY TRACKER
 
 ### 1. Real conversations (conversaciones reales)
@@ -15,33 +23,41 @@ Son 3 fuentes válidas — cualquiera cuenta:
 - **Check-in realizado** (Calendar/Fathom) donde el cliente asistió — status = 'realizado'
 - **Upsell Tracker** — columna "Client Responded" = Yes, con fecha de "Last External Contact" dentro del período
 
-Una conversación por cliente por semana máximo (no se acumula si hay varias).
+Una conversación por cliente por semana máximo (no se acumula si hay varias en la misma semana).
+
+**Target formula (de CONFIG):**
+`ROUND( portafolio_del_HC / portafolio_total_equipo × 52 )` por semana — es decir, proporcional al share de portafolio, con un total de 52 conversaciones/semana para todo el equipo.
 
 ### 2. Upsell pitches opened
 Cuenta **una sola vez por cliente**: la primera vez que ese cliente llega a etapa `Pitched`, `Active` o `Closed` en el Upsell Tracker.
 - Si un cliente ya estaba en Pitched antes del período → NO cuenta en ese período
 - Se usa la tabla `upsell_history` para saber cuándo fue la primera vez
 
+**Target formula:** `ROUND( portafolio_HC / portafolio_total × 13 )` — 13 pitches/semana para el equipo.
+
 ### 3. Deals closed
 Clientes que en el período pasaron a etapa `Active` o `Closed` en el Upsell Tracker (primera vez en esa etapa).
 
+**Target formula:** `ROUND( portafolio_HC / portafolio_total × 17 )` — 17 deals/semana para el equipo.
+
 ### 4. Close rate
-`Deals closed / Upsell pitches opened` para el mismo período. Se muestra como porcentaje.
+`Deals closed / Upsell pitches opened` para el mismo período. Se muestra como porcentaje. Target fijo: 30%.
 
 ### 5. Revenue collected ($)
-No calculado automáticamente en la hoja — se ingresa manualmente. El dashboard puede mostrarlo desde Supabase si se agrega un campo de ingreso por cliente.
+Target proporcional al portafolio: `ROUND( portafolio_HC / portafolio_total × 9300 )`. Total equipo: $9,300/semana (meta $40K/mes ÷ ~4.3 semanas).
+El actual lo ingresa el equipo a mano.
 
 ### 6. Check-ins completed
-Total de check-ins con status = 'realizado' en el período (fuente: tabla `checkins`).
+Total de check-ins con status = 'realizado' en el período (fuente: tabla `checkins`). No tiene target fijo en la hoja — se deja en blanco.
 
 ### 7. No-shows registered
-Total de check-ins con status = 'no_realizado' en el período.
+Total de check-ins con status = 'no_realizado' en el período. Sin target.
 
 ### 8. Unique clients / week
-Clientes distintos con alguna actividad (mensaje GHL outbound o check-in) en la semana.
+Clientes distintos contactados (algún mensaje GHL outbound o check-in) en la semana. Target viene de CONFIG!C35/D35/E35.
 
 ### 9. Outreach actions / week
-Total de mensajes GHL outbound (SMS + llamadas, independientemente de duración) en la semana.
+Total de mensajes GHL outbound (SMS + llamadas, sin importar duración) en la semana. Target viene de CONFIG!C36/D36/E36.
 
 ---
 
